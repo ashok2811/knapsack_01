@@ -1,59 +1,62 @@
 #include "bits/stdc++.h"
 using namespace std;
 
-double findMedianSortedArrays(vector<int> &nums1, vector<int> &nums2) {
+double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
     int n1 = nums1.size();
     int n2 = nums2.size();
 
-    if (n1 == 0) {
-        if (n2 % 2 == 0) {
-            return (nums2[n2/2-1] + nums2[n2/2]) / 2.0;
-        } else {
-            return nums2[n2/2];
-        }
-    }
-
-    if (n2 == 0) {
-        if (n1 % 2 == 0) {
-            return (nums1[n1/2-1] + nums1[n1/2]) / 2.0;
-        } else {
-            return nums1[n1/2];
-        }
-    }
-
-    if(n1>n2){
+    if (n1 > n2) {
         return findMedianSortedArrays(nums2, nums1);
     }
-    
-    // create partition 
-    int partition = (n1 +n2 + 1)/2;
-    
-    int start = 0 , end = n1 ;
+
+    // create partition
+    int partition = (n1 + n2 + 1) / 2;
+
+    int start = 0, end = n1;
     int part1, part2;
-    int leftX = INT_MIN, leftY = INT_MIN, rightX = INT_MAX, rightY = INT_MAX;
+    int leftX, leftY, rightX, rightY;
 
-    while(start<=end){
-      part1 = (start + end)/2;
-      part2 = partition - part1;
+    while (start <= end) {
+        part1 = (start + end) / 2;
+        part2 = partition - part1;
 
-      leftX = nums1[part1-1];
-      leftY = nums2[part2-1];
-      rightX = nums1[part1];
-      rightY = nums2[part2];
-      if(leftX<=rightY && leftY<=rightX){
-        if((n1+n2)%2 == 0){
-          return (max(leftX, leftY) + min(rightX, rightY))/2.0;
+        if (part1 == 0) {
+            leftX = INT_MIN;
+        } else {
+            leftX = nums1[part1 - 1];
         }
-        else{
-          return max(leftX, leftY);
+
+        if (part2 == 0) {
+            leftY = INT_MIN;
+        } else {
+            leftY = nums2[part2 - 1];
         }
-      }else if(leftX>rightY){
-        end = part1-1;
-      }else{
-        start = part1 + 1;
-      }
-      
+
+        if (part1 == n1) {
+            rightX = INT_MAX;
+        } else {
+            rightX = nums1[part1];
+        }
+
+        if (part2 == n2) {
+            rightY = INT_MAX;
+        } else {
+            rightY = nums2[part2];
+        }
+
+        if (leftX <= rightY && leftY <= rightX) {
+            if ((n1 + n2) % 2 == 0) {
+                return (max(leftX, leftY) + min(rightX, rightY)) / 2.0;
+            } else {
+                return max(leftX, leftY);
+            }
+        } else if (leftX > rightY) {
+            end = part1 - 1;
+        } else {
+            start = part1 + 1;
+        }
     }
+
     return -1;
 }
 
